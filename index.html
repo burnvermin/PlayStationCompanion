@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles/style.css">
+    <title>Playsation 5 Companion</title>
+</head>
+<body >
+    <div class="app">
+        <div v-if="showIntro" class="intro" v-on:click="disableIntro()">
+            <video ref="videoRef" src="" class="video-container" width="100%" loop autoplay muted></video>
+        </div>
+        <div v-else >
+            <div v-if="loggedIn" class="accounts">  
+                <div class="bg">
+                    <img v-bind:src="images.loginBGImage" id="logoBGImage">
+                </div>
+                <div class="contents">
+                    <div class="header">
+                        <img v-bind:src="images.psLogoBlalck" alt="">
+                        <p>3:30 PM</p>
+                    </div>
+                    <div class="text">
+                        <h5>Welcome back!</h5>
+                        <h1>Continue where you left off!</h1>
+                    </div>
+                    <div class="displayAccounts">
+                        <div v-for="account in accounts"  class="container" @mouseenter="mouseEnter()"  @mouseleave="mouseLeave()">
+                            <div class="hoverBG">
+                                <img v-bind:src="account.gradientBG">
+                            </div>
+                            <div class="avatar">
+                                <img v-bind:src="account.userImage">
+                            </div>
+                            <div class="avatarName">
+                                <h3>{{account.name }} <img v-bind:src="account.psPlusImage" alt=""></h3>
+                                <p>{{account.desc}}</p>
+                                <button class="signInBtn" @click="signIN(account.id)">{{account.sign}}</button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+            <div v-else class="home">
+                <div class="bg">
+                    <img v-bind:src="images.horizonBG" alt="" style="width: 100vw;" class="horizonBGImg">
+                </div>
+                <div class="bgOverlay">
+                    <img v-bind:src="images.OverlayBG" alt="">
+                </div>
+                <div class="container">
+                    <div v-for="account in accounts" v-if="account.id == activeUser" class="header0 ">
+                        <div class="left leftActive">
+                            <img v-bind:src="account.userImage" alt="" id="userImage">
+                            <p>{{account.name}}</p>
+                            <img v-bind:src="account.psPlusImage" alt="" id="psPlusImage">
+                        </div>
+                        <div class="center">
+                            <img v-bind:src="images.bell" alt="" id="bellImg">
+                            <p>3</p>
+                        </div>
+                        <div class="right">
+                            <div class="friends">                                
+                                <img v-bind:src="images.friends" alt="" id="friendsImg">
+                                <p>13</p>
+                            </div>
+                            <img v-bind:src="images.whiteTrophy" alt="" id="whiteTrophy">
+                            <div class="favourite">
+                                <p>
+                                    <img v-bind:src="images.star" alt="" id="starShape">
+                                    10
+                                </p>
+                                
+                            </div>
+                        </div>
+                        <p id="time"> 04: 30 PM</p>
+                    </div>
+                    <div class="menu">
+                        <ul>
+                            <li class="homeNav activeMenuNav">Home</li>
+                            <li class="lib ">Library</li>
+                            <li>Media</li>
+                            <li>Store</li>
+                        </ul>
+                    </div>
+                    <div class="middleContent ">
+                        <div class="left">
+                            <p>Jump Back In!
+                            </p>
+                        </div>
+                        <div class="center1 active " @mouseenter="middleContentHover()">
+                            <div class="one">
+                                <img v-bind:src="images.horizon" alt="" class="horizonCover">
+                                <div class="one-two">
+                                    <div class="img">
+                                        <img v-bind:src="images.psLogoWhite" alt="">
+                                    </div>
+                                    <strong>Horizon Zero Dawn II</strong>
+                                    <h5>By Ligma Balls</h5>
+                                </div>
+                            </div>
+                            <div class="two">
+                                <div class="p">
+                                    <img v-bind:src="images.achievements.banukLegend" alt="" id="achievement">
+                                    <img v-bind:src="images.trophies.gold" alt="" id="trophy">
+
+                                </div>
+                                <h4>Last earned trophy</h4>
+                                <h1>Banuk Legend</h1>
+                            </div>
+                            <div class="two">
+                                <div class="p">
+                                    <img v-bind:src="images.achievements.chasingHeights" alt="" id="achievement">
+                                    <img v-bind:src="images.trophies.sliver" alt="" id="trophy">
+
+                                </div>
+                                <h4>Top earned trophy</h4>
+                                <h1>Chasing heights</h1>
+                            </div>
+                        </div>
+                        <div class="right1 " @mouseenter="changeArcherBG()">
+                            <div class="row1">
+                                <img v-bind:src="images.hulu" alt="">
+                                <p>Continue Watching</p>
+                            </div>
+                            <div class="row2">
+                                <img v-bind:src="images.archer" alt="">
+                            </div>
+                            <div class="row3">
+                                <h1>Archer</h1>
+                                <p>S3 + E12</p>
+                                <img v-bind:src="images.playIcon" alt="">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="displayGames">
+                        <div v-for="game in games" class="games showGames">
+                            <div id="bannerimage" @click="enlarge(game.id, game.bgCover)">
+                                <img v-bind:src="game.image" alt="">
+                            </div>                           
+                            <div v-if="game.id == activeGame" class="pre-contents ">
+                                <img v-bind:src="game.imageLarge" alt="" id="bannerImageOne">
+                                <div class="contents ">
+                                    <div class="columnOne">
+                                        <div class="rowOne">
+                                           <img v-bind:src="game.psLogo" alt="" class="img">
+                                            <h5>{{game.lastPlayed}}</h5>
+                                        </div>
+                                            <strong>{{game.name}}</strong>
+                                    </div>
+                                    <div class="columnTwo">
+                                        <p>{{game.name}}</p>
+                                    </div>
+                                    <div class="columnThree">
+                                        <img v-bind:src="game.checkpointImage" alt="">
+                                        <div class="columnThreeContent">
+                                        <p>Last Checkpoint</p>
+                                        <h2>{{game.checkpointName}}</h2>
+                                        <P>{{game.date}}&nbsp;&nbsp;&nbsp; + &nbsp;&nbsp;&nbsp;{{game.time}}</P>
+                                        </div>
+                                    </div>
+                                    <div class="columnFour">
+                                        <div class="images">                                         
+                                            <img v-bind:src="game.achievementImageOne" alt="" id="achievement">
+                                            <img v-bind:src="game.sliverTrophyImage" alt="" id="trophy">
+                                        </div>
+                                        <p>Last earned trophy</p>
+                                        <h2>{{game.achievementNameOne}}</h2>
+                                        <div class="rare">
+                                            <img v-bind:src="game.rarityCommonImage" alt="" > 
+                                            <p>{{game.rarityCommon}}</p>
+                                        </div>
+    
+                                    </div>
+                                    <div class="columnFive">
+                                        <div class="images">                                         
+                                            <img v-bind:src="game.achievementImageTwo" alt="" id="achievement">
+                                            <img v-bind:src="game.goldTrophyImage" alt="" id="trophy">
+                                        </div>
+                                        <p>Last earned trophy</p>
+                                        <h2>{{game.achievementNameTwo}}</h2>
+                                        <div class="rare">
+                                            <img v-bind:src="game.rarityRareImage" alt=""> 
+                                            <p>{{game.rarityRare}}</p>
+                                        </div>
+    
+                                    </div>
+                                </div>
+                                
+                                
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script/accounts.js"></script>
+    <script src="script/games.js"></script>
+    <script src="script/displayGames.js"></script>
+    <script src="script/app.js"></script>
+    <script src="script/server.js"></script>
+</body>
+</html>
